@@ -100,10 +100,10 @@ void Scene02ImageSmoothing::Draw()
 
 	s_pShader->use();
 	// TODO: uncomment these lines
-	//s_pShader->sendUniform1i("tex", 0);
-	//s_pShader->sendUniform1i("halfKernelSize", s_HalfKernelSize);
-	//s_pShader->sendUniform1f("uScale", 1.f / float(s_TexWidth));
-	//s_pShader->sendUniform1f("vScale", 1.f / float(s_TexHeight));
+	s_pShader->sendUniform1i("tex", 0);
+	s_pShader->sendUniform1i("halfKernelSize", s_HalfKernelSize);
+	s_pShader->sendUniform1f("uScale", 1.f / float(s_TexWidth));
+	s_pShader->sendUniform1f("vScale", 1.f / float(s_TexHeight));
 
 	glBindVertexArray(s_VAO);
 	glDrawArrays(GL_TRIANGLES, 0, 6);
