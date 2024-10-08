@@ -1,0 +1,190 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Main">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;c++;cppm;ixx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Util">
+      <UniqueIdentifier>{db49fdeb-9a3e-4b97-80db-b579d0ff8fc9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Geometry">
+      <UniqueIdentifier>{a32a975d-645f-4922-9ce5-475b838c1f39}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ImGUI">
+      <UniqueIdentifier>{18f9f8a2-e5bb-4a0c-9603-1f14cb6f736d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Mesh">
+      <UniqueIdentifier>{43d1e39e-d31b-440c-a5ca-3583645ee347}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="src\PseudoNormalColorMaterial.h">
+      <Filter>Main</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Ray.h">
+      <Filter>Main</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Scene.h">
+      <Filter>Main</Filter>
+    </ClInclude>
+    <ClInclude Include="src\SpecularRefractionMaterial.h">
+      <Filter>Main</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Texture.h">
+      <Filter>Main</Filter>
+    </ClInclude>
+    <ClInclude Include="src\TexturedMaterial.h">
+      <Filter>Main</Filter>
+    </ClInclude>
+    <ClInclude Include="src\BlinnPhongMaterial.h">
+      <Filter>Main</Filter>
+    </ClInclude>
+    <ClInclude Include="src\DiffuseMaterial.h">
+      <Filter>Main</Filter>
+    </ClInclude>
+    <ClInclude Include="src\EnvironmentMap.h">
+      <Filter>Main</Filter>
+    </ClInclude>
+    <ClInclude Include="src\GeometricObject.h">
+      <Filter>Main</Filter>
+    </ClInclude>
+    <ClInclude Include="src\GLSLProgramObject.h">
+      <Filter>Main</Filter>
+    </ClInclude>
+    <ClInclude Include="src\GLSLShaderObject.h">
+      <Filter>Main</Filter>
+    </ClInclude>
+    <ClInclude Include="src\HitRecord.h">
+      <Filter>Main</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ImageRect.h">
+      <Filter>Main</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Material.h">
+      <Filter>Main</Filter>
+    </ClInclude>
+    <ClInclude Include="src\PathTracer.h">
+      <Filter>Main</Filter>
+    </ClInclude>
+    <ClInclude Include="src\PerfectSpecularMaterial.h">
+      <Filter>Main</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Triangle.h">
+      <Filter>Geometry</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Sphere.h">
+      <Filter>Geometry</Filter>
+    </ClInclude>
+    <ClInclude Include="src\imconfig.h">
+      <Filter>ImGUI</Filter>
+    </ClInclude>
+    <ClInclude Include="src\imgui.h">
+      <Filter>ImGUI</Filter>
+    </ClInclude>
+    <ClInclude Include="src\imgui_impl_glfw.h">
+      <Filter>ImGUI</Filter>
+    </ClInclude>
+    <ClInclude Include="src\imgui_impl_opengl2.h">
+      <Filter>ImGUI</Filter>
+    </ClInclude>
+    <ClInclude Include="src\imgui_internal.h">
+      <Filter>ImGUI</Filter>
+    </ClInclude>
+    <ClInclude Include="src\imstb_rectpack.h">
+      <Filter>ImGUI</Filter>
+    </ClInclude>
+    <ClInclude Include="src\imstb_textedit.h">
+      <Filter>ImGUI</Filter>
+    </ClInclude>
+    <ClInclude Include="src\imstb_truetype.h">
+      <Filter>ImGUI</Filter>
+    </ClInclude>
+    <ClInclude Include="src\arcball_camera.h">
+      <Filter>Util</Filter>
+    </ClInclude>
+    <ClInclude Include="src\CheckGLError.h">
+      <Filter>Util</Filter>
+    </ClInclude>
+    <ClInclude Include="src\tinyfiledialogs.h">
+      <Filter>Util</Filter>
+    </ClInclude>
+    <ClInclude Include="src\fast_obj.h">
+      <Filter>Mesh</Filter>
+    </ClInclude>
+    <ClInclude Include="src\TriangleMesh.h">
+      <Filter>Mesh</Filter>
+    </ClInclude>
+    <ClInclude Include="src\PathFinder.h">
+      <Filter>Util</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="src\Scene.cpp">
+      <Filter>Main</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Texture.cpp">
+      <Filter>Main</Filter>
+    </ClCompile>
+    <ClCompile Include="src\EnvironmentMap.cpp">
+      <Filter>Main</Filter>
+    </ClCompile>
+    <ClCompile Include="src\GeometricObject.cpp">
+      <Filter>Main</Filter>
+    </ClCompile>
+    <ClCompile Include="src\GLSLProgramObject.cpp">
+      <Filter>Main</Filter>
+    </ClCompile>
+    <ClCompile Include="src\GLSLShaderObject.cpp">
+      <Filter>Main</Filter>
+    </ClCompile>
+    <ClCompile Include="src\main.cpp">
+      <Filter>Main</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Material.cpp">
+      <Filter>Main</Filter>
+    </ClCompile>
+    <ClCompile Include="src\PathTracer.cpp">
+      <Filter>Main</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Triangle.cpp">
+      <Filter>Geometry</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Sphere.cpp">
+      <Filter>Geometry</Filter>
+    </ClCompile>
+    <ClCompile Include="src\imgui.cpp">
+      <Filter>ImGUI</Filter>
+    </ClCompile>
+    <ClCompile Include="src\imgui_demo.cpp">
+      <Filter>ImGUI</Filter>
+    </ClCompile>
+    <ClCompile Include="src\imgui_draw.cpp">
+      <Filter>ImGUI</Filter>
+    </ClCompile>
+    <ClCompile Include="src\imgui_impl_glfw.cpp">
+      <Filter>ImGUI</Filter>
+    </ClCompile>
+    <ClCompile Include="src\imgui_impl_opengl2.cpp">
+      <Filter>ImGUI</Filter>
+    </ClCompile>
+    <ClCompile Include="src\imgui_tables.cpp">
+      <Filter>ImGUI</Filter>
+    </ClCompile>
+    <ClCompile Include="src\imgui_widgets.cpp">
+      <Filter>ImGUI</Filter>
+    </ClCompile>
+    <ClCompile Include="src\arcball_camera.cpp">
+      <Filter>Util</Filter>
+    </ClCompile>
+    <ClCompile Include="src\CheckGLError.cpp">
+      <Filter>Util</Filter>
+    </ClCompile>
+    <ClCompile Include="src\tinyfiledialogs.cpp">
+      <Filter>Util</Filter>
+    </ClCompile>
+    <ClCompile Include="src\TriangleMesh.cpp">
+      <Filter>Mesh</Filter>
+    </ClCompile>
+  </ItemGroup>
+</Project>

@@ -1,0 +1,151 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Main">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;c++;cppm;ixx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="GLSL">
+      <UniqueIdentifier>{5633a606-31fb-4d2b-8ba5-ff4beb6d040e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ImGUI">
+      <UniqueIdentifier>{28ad018c-7a29-4dff-b491-331e839aad06}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Util">
+      <UniqueIdentifier>{9ac9214b-e2f5-4e2e-950c-31d116f57051}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Mesh">
+      <UniqueIdentifier>{1dfb5829-fefb-481d-bad9-280c9bd443c8}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="src\Scene02ShadowMapping.cpp">
+      <Filter>Main</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Scene03MultipleRenderTarget.cpp">
+      <Filter>Main</Filter>
+    </ClCompile>
+    <ClCompile Include="src\AbstractScene.cpp">
+      <Filter>Main</Filter>
+    </ClCompile>
+    <ClCompile Include="src\main.cpp">
+      <Filter>Main</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Scene01ShadingExamples.cpp">
+      <Filter>Main</Filter>
+    </ClCompile>
+    <ClCompile Include="src\imgui.cpp">
+      <Filter>ImGUI</Filter>
+    </ClCompile>
+    <ClCompile Include="src\imgui_draw.cpp">
+      <Filter>ImGUI</Filter>
+    </ClCompile>
+    <ClCompile Include="src\imgui_impl_glfw.cpp">
+      <Filter>ImGUI</Filter>
+    </ClCompile>
+    <ClCompile Include="src\imgui_impl_opengl3.cpp">
+      <Filter>ImGUI</Filter>
+    </ClCompile>
+    <ClCompile Include="src\imgui_tables.cpp">
+      <Filter>ImGUI</Filter>
+    </ClCompile>
+    <ClCompile Include="src\imgui_widgets.cpp">
+      <Filter>ImGUI</Filter>
+    </ClCompile>
+    <ClCompile Include="src\TriMesh.cpp">
+      <Filter>Mesh</Filter>
+    </ClCompile>
+    <ClCompile Include="src\arcball_camera.cpp">
+      <Filter>Util</Filter>
+    </ClCompile>
+    <ClCompile Include="src\CheckGLError.cpp">
+      <Filter>Util</Filter>
+    </ClCompile>
+    <ClCompile Include="src\DirectionalLightManager.cpp">
+      <Filter>Util</Filter>
+    </ClCompile>
+    <ClCompile Include="src\GLSLProgramObject.cpp">
+      <Filter>Util</Filter>
+    </ClCompile>
+    <ClCompile Include="src\GLSLShaderObject.cpp">
+      <Filter>Util</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Image2OGLTexture.cpp">
+      <Filter>Util</Filter>
+    </ClCompile>
+    <ClCompile Include="src\tinyfiledialogs.cpp">
+      <Filter>Util</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="src\Scene02ShadowMapping.h">
+      <Filter>Main</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Scene03MultipleRenderTarget.h">
+      <Filter>Main</Filter>
+    </ClInclude>
+    <ClInclude Include="src\AbstractScene.h">
+      <Filter>Main</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Scene01ShadingExamples.h">
+      <Filter>Main</Filter>
+    </ClInclude>
+    <ClInclude Include="src\imconfig.h">
+      <Filter>ImGUI</Filter>
+    </ClInclude>
+    <ClInclude Include="src\imgui.h">
+      <Filter>ImGUI</Filter>
+    </ClInclude>
+    <ClInclude Include="src\imgui_impl_glfw.h">
+      <Filter>ImGUI</Filter>
+    </ClInclude>
+    <ClInclude Include="src\imgui_impl_opengl3.h">
+      <Filter>ImGUI</Filter>
+    </ClInclude>
+    <ClInclude Include="src\imgui_internal.h">
+      <Filter>ImGUI</Filter>
+    </ClInclude>
+    <ClInclude Include="src\imstb_rectpack.h">
+      <Filter>ImGUI</Filter>
+    </ClInclude>
+    <ClInclude Include="src\imstb_textedit.h">
+      <Filter>ImGUI</Filter>
+    </ClInclude>
+    <ClInclude Include="src\imstb_truetype.h">
+      <Filter>ImGUI</Filter>
+    </ClInclude>
+    <ClInclude Include="src\TriMesh.h">
+      <Filter>Mesh</Filter>
+    </ClInclude>
+    <ClInclude Include="src\fast_obj.h">
+      <Filter>Mesh</Filter>
+    </ClInclude>
+    <ClInclude Include="src\arcball_camera.h">
+      <Filter>Util</Filter>
+    </ClInclude>
+    <ClInclude Include="src\CheckGLError.h">
+      <Filter>Util</Filter>
+    </ClInclude>
+    <ClInclude Include="src\DirectionalLightManager.h">
+      <Filter>Util</Filter>
+    </ClInclude>
+    <ClInclude Include="src\GLSLProgramObject.h">
+      <Filter>Util</Filter>
+    </ClInclude>
+    <ClInclude Include="src\GLSLShaderObject.h">
+      <Filter>Util</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Image2OGLTexture.h">
+      <Filter>Util</Filter>
+    </ClInclude>
+    <ClInclude Include="src\PathFinder.h">
+      <Filter>Util</Filter>
+    </ClInclude>
+    <ClInclude Include="src\tinyfiledialogs.h">
+      <Filter>Util</Filter>
+    </ClInclude>
+    <ClInclude Include="src\MaterialParameters.h">
+      <Filter>Util</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>
