@@ -115,8 +115,8 @@ void Scene03WaveAnimation::Draw()
 	s_pShader->use();
 	s_pShader->sendUniformMatrix4fv("projModelViewMatrix", glm::value_ptr(projModelViewMatrix));
 	// TODO: uncomment these lines
-	//s_pShader->sendUniform1f("temporalSignal", ImGui::GetTime() / 5.f);
-	//s_pShader->sendUniform4f("lineColor", 1, 1, 1, 1);
+	s_pShader->sendUniform1f("temporalSignal", ImGui::GetTime() / 5.f);
+	s_pShader->sendUniform4f("lineColor", 1, 1, 1, 1);
 
 	glBindVertexArray(s_VAO);
 	glDrawArrays(GL_LINES, 0, s_NumQuadLineVertices);
