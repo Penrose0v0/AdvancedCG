@@ -8,4 +8,5 @@ This repository is only for saving my answer.
 
 - 10-09: Finished scene01
 - 10-09: Finished scene02
+- 10-10: Finished scene03
 - (To do) Finish all scenes remained in Advanced01
