@@ -12,6 +12,7 @@ uniform float vScale;
 void main()
 {
 	// TODO: write an appropriate code here
+	fragColor = vec4(0); 
 	for (int dx = -halfKernelSize; dx <= halfKernelSize; dx++) {
 		for (int dy = -halfKernelSize; dy <= halfKernelSize; dy++) {
 			vec2 offset = vec2(dx * uScale, dy * vScale); 
@@ -20,5 +21,4 @@ void main()
 		}
 	}
 	fragColor /= fragColor.a; 
-
 }
