@@ -38,8 +38,8 @@ void Scene05EnvironmentMapping::Init()
 	finder.addSearchPath("../Resources");
 	finder.addSearchPath("../../Resources");
 
-	s_TriMesh.loadObj(finder.find("sphere_642verts.obj").c_str());
-	//s_TriMesh.loadObj(finder.find("bunny10k.obj").c_str());
+	// s_TriMesh.loadObj(finder.find("sphere_642verts.obj").c_str());
+	s_TriMesh.loadObj(finder.find("bunny10k.obj").c_str());
 
 	{
 		int w, h;
@@ -160,8 +160,8 @@ void Scene05EnvironmentMapping::Draw()
 	s_pShader->use();
 	s_pShader->sendUniformMatrix4fv("projModelViewMatrix", glm::value_ptr(projModelViewMatrix));
 	// TODO: uncomment these lines
-	//s_pShader->sendUniform3fv("eye", glm::value_ptr(eye));
-	//s_pShader->sendUniform1ui("envmap", 0);
+	s_pShader->sendUniform3fv("eye", glm::value_ptr(eye));
+	s_pShader->sendUniform1ui("envmap", 0);
 
 	glBindVertexArray(s_VAO);
 	glDrawArrays(GL_TRIANGLES, 0, 3 * s_TriMesh.getNumTriangles());
