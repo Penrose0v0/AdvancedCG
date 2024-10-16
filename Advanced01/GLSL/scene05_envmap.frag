@@ -1,4 +1,4 @@
-#version 130
+﻿#version 130
 
 #define PI 3.141592653589793
 
@@ -18,7 +18,14 @@ float atan2(in float y, in float x)
 void main()
 {
 	// TODO: write an appropriate code here
-	float theta = atan2(vWorldNormal.y, vWorldNormal.x); 
-	float sai = atan2(vWorldNormal.z, vWorldNormal.x); 
-	fragColor = texture2D(envmap, vec2(sai, theta));
+	vec3 reflectedDir = reflect(vWorldEyeDir, vWorldNormal);
+
+	float theta = atan2(reflectedDir.y, reflectedDir.x); 
+	// float phi = reflectedDir.x > 0 ? asin(reflectedDir.z) : asin(reflectedDir.z) + sign(reflectedDir.z) * PI / 2; 
+	float phi = asin(reflectedDir.z); 
+
+	float latitude = (theta + PI) / (2.0 * PI);
+    float longitude = (phi + PI / 2.0) / PI; 
+
+	fragColor = texture2D(envmap, vec2(longitude, latitude));
 }

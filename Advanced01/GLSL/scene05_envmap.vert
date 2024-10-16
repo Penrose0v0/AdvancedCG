@@ -15,5 +15,5 @@ void main()
 	// TODO: write an appropriate code here
 	gl_Position = projModelViewMatrix * vertexPosition;
 	vWorldEyeDir = normalize(vertexPosition.xyz - eye); 
-	vWorldNormal = reflect(vWorldEyeDir, vertexNormal); 
+	vWorldNormal = normalize(vertexNormal);
 }
