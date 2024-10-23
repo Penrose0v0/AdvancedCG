@@ -163,6 +163,10 @@ void Scene03MultipleRenderTarget::Draw()
 	s_pShader->sendUniformMatrix4fv("projMatrix", glm::value_ptr(g_ProjMatrix));
 	s_pShader->sendUniformMatrix4fv("modelViewMatrix", glm::value_ptr(modelViewMatrix));
 
+	// 0v0
+	glm::mat3 modelViewInvTransposed = glm::transpose(glm::inverse(glm::mat3(modelViewMatrix)));
+	s_pShader->sendUniformMatrix3fv("modelViewInvTransposed", glm::value_ptr(modelViewInvTransposed));
+
 	glBindVertexArray(s_MeshVAO);
 	glDrawArrays(GL_TRIANGLES, 0, 3 * g_TriMesh.getNumTriangles());
 	glBindVertexArray(0);
