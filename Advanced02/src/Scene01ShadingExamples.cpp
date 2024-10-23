@@ -173,20 +173,20 @@ void Scene01ShadingExamples::Draw()
 		pShader->sendUniformMatrix4fv("projMatrix", glm::value_ptr(g_ProjMatrix));
 		pShader->sendUniformMatrix4fv("modelViewMatrix", glm::value_ptr(modelViewMatrix));
 		// TODO: uncomment these lines
-		//pShader->sendUniformMatrix3fv("modelViewInverseTransposed", glm::value_ptr(modelViewInverseTransposed));
-		//pShader->sendUniform3fv("eLightDir", glm::value_ptr(eLightDir));
-		//pShader->sendUniform3fv("lightColor", glm::value_ptr(color));
-		//pShader->sendUniform1f("shininess", g_Material.shininess);
-		//pShader->sendUniform3fv("diffuseCoeff", glm::value_ptr(g_Material.diffuseCoeff));
-		//pShader->sendUniform3fv("ambient", glm::value_ptr(g_Material.ambient));
+		pShader->sendUniformMatrix3fv("modelViewInverseTransposed", glm::value_ptr(modelViewInverseTransposed));
+		pShader->sendUniform3fv("eLightDir", glm::value_ptr(eLightDir));
+		pShader->sendUniform3fv("lightColor", glm::value_ptr(color));
+		pShader->sendUniform1f("shininess", g_Material.shininess);
+		pShader->sendUniform3fv("diffuseCoeff", glm::value_ptr(g_Material.diffuseCoeff));
+		pShader->sendUniform3fv("ambient", glm::value_ptr(g_Material.ambient));
 
 		glBindVertexArray(s_MeshVAO);
 		glDrawArrays(GL_TRIANGLES, 0, 3 * g_TriMesh.getNumTriangles());
 		glBindVertexArray(0);
 
 		// TODO: uncomment these lines
-		//pShader->sendUniformMatrix4fv("modelViewMatrix", glm::value_ptr(viewMatrix));
-		//pShader->sendUniformMatrix3fv("modelViewInverseTransposed", glm::value_ptr(glm::mat3(viewMatrix)));
+		pShader->sendUniformMatrix4fv("modelViewMatrix", glm::value_ptr(viewMatrix));
+		pShader->sendUniformMatrix3fv("modelViewInverseTransposed", glm::value_ptr(glm::mat3(viewMatrix)));
 
 		glBindVertexArray(s_PlaneVAO);
 		glDrawArrays(GL_TRIANGLES, 0, 3 * g_Plane.getNumTriangles());

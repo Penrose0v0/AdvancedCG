@@ -5,9 +5,6 @@
       <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
       <Extensions>cpp;c;cc;cxx;c++;cppm;ixx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
     </Filter>
-    <Filter Include="GLSL">
-      <UniqueIdentifier>{5633a606-31fb-4d2b-8ba5-ff4beb6d040e}</UniqueIdentifier>
-    </Filter>
     <Filter Include="ImGUI">
       <UniqueIdentifier>{28ad018c-7a29-4dff-b491-331e839aad06}</UniqueIdentifier>
     </Filter>
@@ -16,6 +13,9 @@
     </Filter>
     <Filter Include="Mesh">
       <UniqueIdentifier>{1dfb5829-fefb-481d-bad9-280c9bd443c8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ImGUI\GLSL">
+      <UniqueIdentifier>{5633a606-31fb-4d2b-8ba5-ff4beb6d040e}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -147,5 +147,76 @@
     <ClInclude Include="src\MaterialParameters.h">
       <Filter>Util</Filter>
     </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="GLSL\arrow.frag">
+      <Filter>ImGUI\GLSL</Filter>
+    </None>
+    <None Include="GLSL\arrow.vert">
+      <Filter>ImGUI\GLSL</Filter>
+    </None>
+    <None Include="GLSL\blinn.frag">
+      <Filter>ImGUI\GLSL</Filter>
+    </None>
+    <None Include="GLSL\blinn.vert">
+      <Filter>ImGUI\GLSL</Filter>
+    </None>
+    <None Include="GLSL\blinn_phong.frag">
+      <Filter>ImGUI\GLSL</Filter>
+    </None>
+    <None Include="GLSL\blinn_phong.vert">
+      <Filter>ImGUI\GLSL</Filter>
+    </None>
+    <None Include="GLSL\cook_torrance.frag">
+      <Filter>ImGUI\GLSL</Filter>
+    </None>
+    <None Include="GLSL\cook_torrance.vert">
+      <Filter>ImGUI\GLSL</Filter>
+    </None>
+    <None Include="GLSL\gray_tex.frag">
+      <Filter>ImGUI\GLSL</Filter>
+    </None>
+    <None Include="GLSL\lambert.frag">
+      <Filter>ImGUI\GLSL</Filter>
+    </None>
+    <None Include="GLSL\lambert.vert">
+      <Filter>ImGUI\GLSL</Filter>
+    </None>
+    <None Include="GLSL\mrt.frag">
+      <Filter>ImGUI\GLSL</Filter>
+    </None>
+    <None Include="GLSL\mrt.vert">
+      <Filter>ImGUI\GLSL</Filter>
+    </None>
+    <None Include="GLSL\pcf_shadow_blinn_phong.frag">
+      <Filter>ImGUI\GLSL</Filter>
+    </None>
+    <None Include="GLSL\pcf_shadow_blinn_phong.vert">
+      <Filter>ImGUI\GLSL</Filter>
+    </None>
+    <None Include="GLSL\phong.frag">
+      <Filter>ImGUI\GLSL</Filter>
+    </None>
+    <None Include="GLSL\phong.vert">
+      <Filter>ImGUI\GLSL</Filter>
+    </None>
+    <None Include="GLSL\shadow_1st_pass.frag">
+      <Filter>ImGUI\GLSL</Filter>
+    </None>
+    <None Include="GLSL\shadow_1st_pass.vert">
+      <Filter>ImGUI\GLSL</Filter>
+    </None>
+    <None Include="GLSL\shadow_blinn_phong.frag">
+      <Filter>ImGUI\GLSL</Filter>
+    </None>
+    <None Include="GLSL\shadow_blinn_phong.vert">
+      <Filter>ImGUI\GLSL</Filter>
+    </None>
+    <None Include="GLSL\tex.frag">
+      <Filter>ImGUI\GLSL</Filter>
+    </None>
+    <None Include="GLSL\tex.vert">
+      <Filter>ImGUI\GLSL</Filter>
+    </None>
   </ItemGroup>
 </Project>

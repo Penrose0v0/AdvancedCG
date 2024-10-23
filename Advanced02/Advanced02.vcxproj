@@ -175,6 +175,31 @@
     <ClInclude Include="src\tinyfiledialogs.h" />
     <ClInclude Include="src\TriMesh.h" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="GLSL\arrow.frag" />
+    <None Include="GLSL\arrow.vert" />
+    <None Include="GLSL\blinn.frag" />
+    <None Include="GLSL\blinn.vert" />
+    <None Include="GLSL\blinn_phong.frag" />
+    <None Include="GLSL\blinn_phong.vert" />
+    <None Include="GLSL\cook_torrance.frag" />
+    <None Include="GLSL\cook_torrance.vert" />
+    <None Include="GLSL\gray_tex.frag" />
+    <None Include="GLSL\lambert.frag" />
+    <None Include="GLSL\lambert.vert" />
+    <None Include="GLSL\mrt.frag" />
+    <None Include="GLSL\mrt.vert" />
+    <None Include="GLSL\pcf_shadow_blinn_phong.frag" />
+    <None Include="GLSL\pcf_shadow_blinn_phong.vert" />
+    <None Include="GLSL\phong.frag" />
+    <None Include="GLSL\phong.vert" />
+    <None Include="GLSL\shadow_1st_pass.frag" />
+    <None Include="GLSL\shadow_1st_pass.vert" />
+    <None Include="GLSL\shadow_blinn_phong.frag" />
+    <None Include="GLSL\shadow_blinn_phong.vert" />
+    <None Include="GLSL\tex.frag" />
+    <None Include="GLSL\tex.vert" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>
