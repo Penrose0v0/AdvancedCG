@@ -265,15 +265,15 @@ void Scene02ShadowMapping::Draw()
 		s_pSoftShadow2ndPassShader->sendUniformMatrix4fv("projMatrix", glm::value_ptr(g_ProjMatrix));
 		s_pSoftShadow2ndPassShader->sendUniformMatrix4fv("modelViewMatrix", glm::value_ptr(modelViewMatrix));
 		// TODO: uncomment these lines
-		//s_pSoftShadow2ndPassShader->sendUniformMatrix3fv("modelViewInverseTransposed", glm::value_ptr(modelViewInverseTransposed));
-		//s_pSoftShadow2ndPassShader->sendUniform1i("shadowTex", 0);
-		//s_pSoftShadow2ndPassShader->sendUniform2f("texMapScale", 1.f / float(s_ShadowTexSize), 1.f / float(s_ShadowTexSize));
-		//s_pSoftShadow2ndPassShader->sendUniformMatrix4fv("biasedShadowProjModelView", glm::value_ptr(biasMatrix * shadowProjModelView));
-		//s_pSoftShadow2ndPassShader->sendUniform3fv("eLightDir", glm::value_ptr(eLightDir));
-		//s_pSoftShadow2ndPassShader->sendUniform3fv("lightColor", glm::value_ptr(color));
-		//s_pSoftShadow2ndPassShader->sendUniform1f("shininess", g_Material.shininess);
-		//s_pSoftShadow2ndPassShader->sendUniform3fv("diffuseCoeff", glm::value_ptr(g_Material.diffuseCoeff));
-		//s_pSoftShadow2ndPassShader->sendUniform3fv("ambient", glm::value_ptr(g_Material.ambient));
+		s_pSoftShadow2ndPassShader->sendUniformMatrix3fv("modelViewInverseTransposed", glm::value_ptr(modelViewInverseTransposed));
+		s_pSoftShadow2ndPassShader->sendUniform1i("shadowTex", 0);
+		s_pSoftShadow2ndPassShader->sendUniform2f("texMapScale", 1.f / float(s_ShadowTexSize), 1.f / float(s_ShadowTexSize));
+		s_pSoftShadow2ndPassShader->sendUniformMatrix4fv("biasedShadowProjModelView", glm::value_ptr(biasMatrix * shadowProjModelView));
+		s_pSoftShadow2ndPassShader->sendUniform3fv("eLightDir", glm::value_ptr(eLightDir));
+		s_pSoftShadow2ndPassShader->sendUniform3fv("lightColor", glm::value_ptr(color));
+		s_pSoftShadow2ndPassShader->sendUniform1f("shininess", g_Material.shininess);
+		s_pSoftShadow2ndPassShader->sendUniform3fv("diffuseCoeff", glm::value_ptr(g_Material.diffuseCoeff));
+		s_pSoftShadow2ndPassShader->sendUniform3fv("ambient", glm::value_ptr(g_Material.ambient));
 	}
 	else
 	{
@@ -281,14 +281,14 @@ void Scene02ShadowMapping::Draw()
 		s_pShadow2ndPassShader->sendUniformMatrix4fv("projMatrix", glm::value_ptr(g_ProjMatrix));
 		s_pShadow2ndPassShader->sendUniformMatrix4fv("modelViewMatrix", glm::value_ptr(modelViewMatrix));
 		// TODO: uncomment these lines
-		//s_pShadow2ndPassShader->sendUniformMatrix3fv("modelViewInverseTransposed", glm::value_ptr(modelViewInverseTransposed));
-		//s_pShadow2ndPassShader->sendUniform1i("shadowTex", 0);
-		//s_pShadow2ndPassShader->sendUniformMatrix4fv("biasedShadowProjModelView", glm::value_ptr(biasMatrix* shadowProjModelView));
-		//s_pShadow2ndPassShader->sendUniform3fv("eLightDir", glm::value_ptr(eLightDir));
-		//s_pShadow2ndPassShader->sendUniform3fv("lightColor", glm::value_ptr(color));
-		//s_pShadow2ndPassShader->sendUniform1f("shininess", g_Material.shininess);
-		//s_pShadow2ndPassShader->sendUniform3fv("diffuseCoeff", glm::value_ptr(g_Material.diffuseCoeff));
-		//s_pShadow2ndPassShader->sendUniform3fv("ambient", glm::value_ptr(g_Material.ambient));
+		s_pShadow2ndPassShader->sendUniformMatrix3fv("modelViewInverseTransposed", glm::value_ptr(modelViewInverseTransposed));
+		s_pShadow2ndPassShader->sendUniform1i("shadowTex", 0);
+		s_pShadow2ndPassShader->sendUniformMatrix4fv("biasedShadowProjModelView", glm::value_ptr(biasMatrix* shadowProjModelView));
+		s_pShadow2ndPassShader->sendUniform3fv("eLightDir", glm::value_ptr(eLightDir));
+		s_pShadow2ndPassShader->sendUniform3fv("lightColor", glm::value_ptr(color));
+		s_pShadow2ndPassShader->sendUniform1f("shininess", g_Material.shininess);
+		s_pShadow2ndPassShader->sendUniform3fv("diffuseCoeff", glm::value_ptr(g_Material.diffuseCoeff));
+		s_pShadow2ndPassShader->sendUniform3fv("ambient", glm::value_ptr(g_Material.ambient));
 	}
 
 	glBindVertexArray(s_MeshVAO);
@@ -296,10 +296,10 @@ void Scene02ShadowMapping::Draw()
 	glBindVertexArray(0);
 
 	// TODO: uncomment these lines
-	//if (s_UseSoftShadow)
-	//	s_pSoftShadow2ndPassShader->sendUniformMatrix4fv("modelViewMatrix", glm::value_ptr(viewMatrix));
-	//else
-	//	s_pShadow2ndPassShader->sendUniformMatrix4fv("modelViewMatrix", glm::value_ptr(viewMatrix));
+	if (s_UseSoftShadow)
+		s_pSoftShadow2ndPassShader->sendUniformMatrix4fv("modelViewMatrix", glm::value_ptr(viewMatrix));
+	else
+		s_pShadow2ndPassShader->sendUniformMatrix4fv("modelViewMatrix", glm::value_ptr(viewMatrix));
 
 	glBindVertexArray(s_PlaneVAO);
 	glDrawArrays(GL_TRIANGLES, 0, 3 * g_Plane.getNumTriangles());
