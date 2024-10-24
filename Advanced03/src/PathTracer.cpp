@@ -186,14 +186,199 @@ glm::vec3 PathTracer::traceRec(const Ray& ray, int recursionDepth)
 		// HINT: local coordinate system can be defined using the following function:
 		//vec3 xLocal, yLocal, zLocal;
 		//calcLocalCoordinateSystem(record.m_Normal, ray.getUnitDir(), xLocal, yLocal, zLocal);
+		const float M_PI = 3.14159265358979323;
+		vec3 normal = normalize(record.m_Normal);
+		vec3 incomingDir = normalize(ray.getUnitDir());
 
-		return vec3(0.f);
+		// Create an orthonormal basis (xLocal, yLocal, zLocal)
+		vec3 zLocal = normal;
+		vec3 xLocal = normalize(glm::cross((fabs(zLocal.x) > 0.1f ? vec3(0.0f, 1.0f, 0.0f) : vec3(1.0f, 0.0f, 0.0f)), zLocal));
+		vec3 yLocal = glm::cross(zLocal, xLocal);
+
+		// Cosine-weighted hemisphere sampling
+		float r1 = frand();
+		float r2 = frand();
+		float phi = 2.0f * M_PI * r1;
+		float cosTheta = sqrt(1.0f - r2);
+		float sinTheta = sqrt(r2);
+
+		// Convert spherical coordinates to Cartesian coordinates in the local system
+		vec3 sampledDir = normalize(
+			cos(phi) * sinTheta * xLocal +
+			sin(phi) * sinTheta * yLocal +
+			cosTheta * zLocal
+		);
+
+		// Ensure the sampled direction is in the same hemisphere as the normal
+		if (dot(sampledDir, normal) < 0.0f)
+			sampledDir = -sampledDir;
+
+		// Offset the hit position slightly to prevent self-intersection
+		vec3 newOrigin = record.m_HitPos + normal * 0.001f;
+
+		// Create the new ray
+		Ray newRay(newOrigin, sampledDir);
+
+		// Retrieve the diffuse reflectance
+		DiffuseMaterial* diffuseMat = static_cast<DiffuseMaterial*>(record.m_pMaterial);
+		vec3 diffuseCoeff = diffuseMat->getDiffuseCoeff();
+
+		// Calculate the BRDF value for Lambertian reflection
+		// BRDF = diffuseCoeff / PI
+		vec3 brdf = diffuseCoeff / M_PI;
+
+		// Calculate the cosine of the angle between the normal and the sampled direction
+		float cosAlpha = std::max(dot(sampledDir, normal), 0.0f);
+
+		// Russian Roulette termination
+		float probability = 1.0f;
+		if (recursionDepth >= s_MinRecursionDepth)
+		{
+			// Probability based on the maximum component of diffuse reflectance
+			probability = std::max(diffuseCoeff.r, std::max(diffuseCoeff.g, diffuseCoeff.b));
+			if (frand() >= probability)
+				return g_Scene.getBackgroundColor(ray);
+		}
+
+		// Trace the new ray recursively
+		vec3 incomingRadiance = traceRec(newRay, recursionDepth + 1);
+
+		// Compute the contribution with the BRDF, cosine term, and probability
+		vec3 contribution = (brdf * incomingRadiance * cosAlpha) / probability;
+
+		return contribution;
 	}
 	else if (matType == Material::Blinn_Phong_Type)
 	{
 		// TODO: implement Blinn-Phong reflection with BRDF importance sampling
+		const float M_PI = 3.14159265358979323;
+		BlinnPhongMaterial* blinnMat = static_cast<BlinnPhongMaterial*>(record.m_pMaterial);
+		vec3 diffuseCoeff = blinnMat->getDiffuseCoeff();
+		vec3 specularCoeff = blinnMat->getSpecularCoeff();
+		float shininess = blinnMat->getShininess();
 
-		return vec3(0.f);
+		// Total reflectance
+		vec3 totalReflectance = diffuseCoeff + specularCoeff;
+		float maxReflectance = std::max(totalReflectance.r, std::max(totalReflectance.g, totalReflectance.b));
+
+		// Russian Roulette termination
+		float probability = 1.0f;
+		if (recursionDepth >= s_MinRecursionDepth)
+		{
+			probability = maxReflectance;
+			if (frand() >= probability)
+				return g_Scene.getBackgroundColor(ray);
+		}
+
+		// Determine whether to sample diffuse or specular based on their weights
+		float diffuseWeight = length(diffuseCoeff);
+		float specularWeight = length(specularCoeff);
+		float weightSum = diffuseWeight + specularWeight;
+
+		// Avoid division by zero
+		float diffuseProbability = (weightSum > 0.0f) ? (diffuseWeight / weightSum) : 0.0f;
+		float specularProbability = (weightSum > 0.0f) ? (specularWeight / weightSum) : 0.0f;
+
+		// Randomly choose to sample diffuse or specular
+		float sampleChoice = frand();
+
+		vec3 sampledDir;
+		vec3 brdf;
+		float pdf = 0.0f;
+
+		// Normalize the normal and incoming direction
+		vec3 normal = normalize(record.m_Normal);
+		vec3 incomingDir = normalize(ray.getUnitDir());
+
+		// Create an orthonormal basis (xLocal, yLocal, zLocal)
+		vec3 zLocal = normal;
+		vec3 xLocal = normalize(glm::cross((fabs(zLocal.x) > 0.1f ? vec3(0.0f, 1.0f, 0.0f) : vec3(1.0f, 0.0f, 0.0f)), zLocal));
+		vec3 yLocal = glm::cross(zLocal, xLocal);
+
+		if (sampleChoice < diffuseProbability)
+		{
+			// Diffuse sampling (cosine-weighted hemisphere)
+
+			float r1 = frand();
+			float r2 = frand();
+			float phi = 2.0f * M_PI * r1;
+			float cosTheta = sqrt(1.0f - r2);
+			float sinTheta = sqrt(r2);
+
+			// Convert spherical coordinates to Cartesian coordinates in the local system
+			sampledDir = normalize(
+				cos(phi) * sinTheta * xLocal +
+				sin(phi) * sinTheta * yLocal +
+				cosTheta * zLocal
+			);
+
+			// Ensure the sampled direction is in the same hemisphere as the normal
+			if (dot(sampledDir, normal) < 0.0f)
+				sampledDir = -sampledDir;
+
+			// BRDF for diffuse
+			brdf = diffuseCoeff / M_PI;
+
+			// PDF for cosine-weighted sampling
+			pdf = dot(sampledDir, normal) / M_PI;
+		}
+		else
+		{
+			// Specular sampling (Blinn-Phong)
+
+			// Sample the half-vector based on the Blinn-Phong distribution
+			float r1 = frand();
+			float r2 = frand();
+			float theta = acos(pow(r1, 1.0f / (shininess + 1.0f)));
+			float phi = 2.0f * M_PI * r2;
+
+			float sinTheta = sin(theta);
+			float cosTheta = cos(theta);
+
+			// Half-vector in local space
+			vec3 halfVector = normalize(
+				cos(phi) * sinTheta * xLocal +
+				sin(phi) * sinTheta * yLocal +
+				cosTheta * zLocal
+			);
+
+			// Compute the sampled direction by reflecting the incoming direction around the half-vector
+			sampledDir = normalize(reflect(-incomingDir, halfVector));
+
+			// Ensure the sampled direction is in the same hemisphere as the normal
+			if (dot(sampledDir, normal) < 0.0f)
+				sampledDir = -sampledDir;
+
+			// BRDF for Blinn-Phong specular
+			float nDotH = std::max(dot(normal, halfVector), 0.0f);
+			brdf = specularCoeff * ((shininess + 2.0f) / (2.0f * M_PI)) * pow(nDotH, shininess);
+
+			// PDF for Blinn-Phong sampling
+			pdf = ((shininess + 1.0f) * pow(nDotH, shininess)) / (2.0f * M_PI);
+		}
+
+		// Avoid division by zero
+		if (pdf <= 0.0f)
+			return vec3(0.0f);
+
+		// Offset the hit position slightly to prevent self-intersection
+		vec3 newOrigin = record.m_HitPos + normal * 0.001f;
+
+		// Create the new ray
+		Ray newRay(newOrigin, sampledDir);
+
+		// Calculate the cosine of the angle between the normal and the sampled direction
+		float cosAlpha = std:: max(dot(sampledDir, normal), 0.0f);
+
+		// Trace the new ray recursively
+		vec3 incomingRadiance = traceRec(newRay, recursionDepth + 1);
+
+		// Compute the contribution with the BRDF, cosine term, PDF, and probability
+		vec3 contribution = (brdf * incomingRadiance * cosAlpha) / (pdf * probability);
+
+		return contribution;
+
+		// return vec3(0.f);
 	}
 	else if (matType == Material::Perfect_Specular_Type)
 	{
