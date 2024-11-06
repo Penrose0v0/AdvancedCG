@@ -126,38 +126,35 @@ HalfEdge::Mesh LoopSubdivision::apply(HalfEdge::Mesh& mesh)
 
 		// TODO: calculate the new vertex position
 		// c.f., HalfEdge::Vertex::countValence() in HalfEdgeDataStructure.cpp
-
-		int valence = oldVertex->countValence(); 
-		float beta; 
-
-		if (valence == 2) beta = 1.0f / 8.0f; 
-		else if (valence == 3) beta = 3.0f / 16.0f;
-		else beta = (3.0f / (8.0f * valence));
-
 		vec3 sum = vec3(0.0f);
 		HalfEdge::HalfEdge* startHE = oldVertex->pHalfEdge;
 		HalfEdge::HalfEdge* he = startHE;
-		bool onBoundary = false;
+		int valence; 
+		float beta;
 
-		do {
-			if (he->pPair == nullptr) {
-				onBoundary = true;
-				break;
-			}
-			sum += he->pPair->pStartVertex->position;
-			he = he->pPair->pNext;
-		} while (he != startHE && he != nullptr);
-
+		bool onBoundary = oldVertex->onBoundary(); 
 		if (onBoundary) {
-			he = startHE->pPrev;
-			do {
-				if (he->pPair == nullptr) break; 
-				sum += he->pPair->pStartVertex->position;
-				he = he->pPair->pPrev;
-			} while (he != startHE && he != nullptr);
+			while (he->pPair != nullptr) he = he->pPair->pNext; 
+			auto p1 = he->pNext->pStartVertex; 
+
+			he = he->pPrev;
+			while (he->pPair != nullptr)  he = he->pPair->pPrev; 
+			auto p2 = he->pStartVertex; 
+
+			sum = p1->position + p2->position; 
+			valence = 2; 
+			beta = 1.0f / 8.0f; 
 		}
+		else {
+			valence = oldVertex->countValence();
+			beta = valence == 3 ? 3.0f / 16.0f : (3.0f / (8.0f * valence)); 
+			do {
+				sum += he->pPair->pStartVertex->position;
+				he = he->pPair->pNext;
+			} while (he != startHE);
+		}
+
 		newVertex->position = (1.0f - valence * beta) * oldVertexPosition + beta * sum;
-	
 	}
 
 	// Step 3: create new faces
@@ -191,51 +188,60 @@ HalfEdge::Mesh LoopSubdivision::apply(HalfEdge::Mesh& mesh)
 		HalfEdge::Face* newFace1 = newMesh.addFace();
 		HalfEdge::HalfEdge* m1_m3 = newMesh.addHalfEdge(); 
 		newFace1->pHalfEdge = o1_m1; 
-		o1_m1->pStartVertex = o1; 
-		o1_m1->pNext = m1_m3; 
-		o1_m1->pPrev = m3_o1; 
+
+		//o1_m1->pStartVertex = o1; 
+		HalfEdge::Helper::SetPrevNext(o1_m1, m1_m3); 
+		HalfEdge::Helper::SetPrevNext(m3_o1, o1_m1);
 		o1_m1->pFace = newFace1; 
+
 		m1_m3->pStartVertex = m1;
-		m1_m3->pNext = m3_o1;
-		m1_m3->pPrev = o1_m1;
+		HalfEdge::Helper::SetPrevNext(m1_m3, m3_o1);
+		HalfEdge::Helper::SetPrevNext(o1_m1, m1_m3);
 		m1_m3->pFace = newFace1;
-		m3_o1->pStartVertex = m3;
-		m3_o1->pNext = o1_m1;
-		m3_o1->pPrev = m1_m3;
+
+		//m3_o1->pStartVertex = m3;
+		HalfEdge::Helper::SetPrevNext(m3_o1, o1_m1);
+		HalfEdge::Helper::SetPrevNext(m1_m3, m3_o1);
 		m3_o1->pFace = newFace1;
 
 		// 2
 		HalfEdge::Face* newFace2 = newMesh.addFace();
 		HalfEdge::HalfEdge* m2_m1 = newMesh.addHalfEdge();
 		newFace2->pHalfEdge = o2_m2;
-		o2_m2->pStartVertex = o2;
-		o2_m2->pNext = m2_m1;
-		o2_m2->pPrev = m1_o2;
+
+		//o2_m2->pStartVertex = o2;
+		HalfEdge::Helper::SetPrevNext(o2_m2, m2_m1);
+		HalfEdge::Helper::SetPrevNext(m1_o2, o2_m2);
 		o2_m2->pFace = newFace2;
+
 		m2_m1->pStartVertex = m2;
-		m2_m1->pNext = m1_o2;
-		m2_m1->pPrev = o2_m2;
+		HalfEdge::Helper::SetPrevNext(m2_m1, m1_o2);
+		HalfEdge::Helper::SetPrevNext(o2_m2, m2_m1);
 		m2_m1->pFace = newFace2;
-		m1_o2->pStartVertex = m1;
-		m1_o2->pNext = o2_m2;
-		m1_o2->pPrev = m2_m1;
+
+		//m1_o2->pStartVertex = m1;
+		HalfEdge::Helper::SetPrevNext(m1_o2, o2_m2);
+		HalfEdge::Helper::SetPrevNext(m2_m1, m1_o2);
 		m1_o2->pFace = newFace2;
 
 		// 3
 		HalfEdge::Face* newFace3 = newMesh.addFace();
 		HalfEdge::HalfEdge* m3_m2 = newMesh.addHalfEdge();
 		newFace3->pHalfEdge = o3_m3;
-		o3_m3->pStartVertex = o3;
-		o3_m3->pNext = m3_m2;
-		o3_m3->pPrev = m2_o3;
+
+		//o3_m3->pStartVertex = o3;
+		HalfEdge::Helper::SetPrevNext(o3_m3, m3_m2);
+		HalfEdge::Helper::SetPrevNext(m2_o3, o3_m3);
 		o3_m3->pFace = newFace3;
+
 		m3_m2->pStartVertex = m3;
-		m3_m2->pNext = m2_o3;
-		m3_m2->pPrev = o3_m3;
+		HalfEdge::Helper::SetPrevNext(m3_m2, m2_o3);
+		HalfEdge::Helper::SetPrevNext(o3_m3, m3_m2);
 		m3_m2->pFace = newFace3;
-		m2_o3->pStartVertex = m2;
-		m2_o3->pNext = o3_m3;
-		m2_o3->pPrev = m3_m2;
+
+		//m2_o3->pStartVertex = m2;
+		HalfEdge::Helper::SetPrevNext(m2_o3, o3_m3);
+		HalfEdge::Helper::SetPrevNext(m3_m2, m2_o3);
 		m2_o3->pFace = newFace3;
 
 		// 4
@@ -244,17 +250,20 @@ HalfEdge::Mesh LoopSubdivision::apply(HalfEdge::Mesh& mesh)
 		HalfEdge::HalfEdge* m2_m3 = newMesh.addHalfEdge();
 		HalfEdge::HalfEdge* m3_m1 = newMesh.addHalfEdge();
 		newFace4->pHalfEdge = m1_m2;
+
 		m1_m2->pStartVertex = m1;
-		m1_m2->pNext = m2_m3;
-		m1_m2->pPrev = m3_m1;
+		HalfEdge::Helper::SetPrevNext(m1_m2, m2_m3);
+		HalfEdge::Helper::SetPrevNext(m3_m1, m1_m2);
 		m1_m2->pFace = newFace4;
+
 		m2_m3->pStartVertex = m2;
-		m2_m3->pNext = m3_m1;
-		m2_m3->pPrev = m1_m2;
+		HalfEdge::Helper::SetPrevNext(m2_m3, m3_m1);
+		HalfEdge::Helper::SetPrevNext(m1_m2, m2_m3);
 		m2_m3->pFace = newFace4;
+
 		m3_m1->pStartVertex = m3;
-		m3_m1->pNext = m1_m2;
-		m3_m1->pPrev = m2_m3;
+		HalfEdge::Helper::SetPrevNext(m3_m1, m1_m2);
+		HalfEdge::Helper::SetPrevNext(m2_m3, m3_m1);
 		m3_m1->pFace = newFace4;
 
 		HalfEdge::Helper::SetPair(m1_m2, m2_m1); 
