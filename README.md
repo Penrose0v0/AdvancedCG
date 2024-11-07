@@ -11,4 +11,4 @@ This repository is only for saving my answer.
 - 10-16: Fixed scene05, **Finished all scenes in Advanced01**
 - 10-23: Finished **all scenes in Advanced02**
 - 10-30: Finished **all scenes in Advanced03**
-- (To do) Finish all scenes remained in Advanced04
+- 11-07: Finished **all scenes in Advanced04**
