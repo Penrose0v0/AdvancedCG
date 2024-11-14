@@ -122,38 +122,36 @@ glm::vec2 rxMeshDeform2D::similarityDeformation(const glm::vec2 &v, const glm::v
 	// ----課題ここから----
 
 	// Init
-	double mu = 0.0;
-	glm::mat2 S(0.0f);
+	float mu = 0.0;
+	glm::vec2 vt(0.0); 
 
-	// 制御点でループして、μ と S を計算
+	// Loop control points
 	for (int k = 0; k < m_iNcp; ++k) {
 		int j = m_vCP[k];
 		glm::vec2 p = m_vP[j] - pc;
 		glm::vec2 q = m_vX[j] - qc;
 
+		// Weight
 		double dist2 = glm::length2(m_vP[j] - v);
 		double w = (dist2 > 1e-6) ? 1.0 / pow(dist2, alpha) : 0.0;
 
+		// Mu
 		mu += w * glm::dot(p, p);
-		S += w * glm::outerProduct(p, q);
+
+		// A -> Temp vector
+		glm::mat2 tmp1(p.x, p.y, p.y, -(p.x));
+		glm::mat2 tmp2((v - pc).x, (v - pc).y, (v - pc).y, -((v - pc).x));
+		glm::mat2 A = w * tmp1 * tmp2;
+
+		vt += glm::transpose(A) * q;
 	}
 
 	if (mu < 1e-6) {
-		// mu が小さすぎる場合、元の位置を返す
+		// Return directly if no inverse
 		fsv = v;
 	}
 	else {
-		// 回転とスケーリングのパラメータを計算
-		double a = (S[0][0] + S[1][1]) / mu;
-		double b = (S[1][0] - S[0][1]) / mu;
-
-		// 変換行列 A を構築
-		glm::mat2 A;
-		A[0][0] = a;  A[0][1] = -b;
-		A[1][0] = b;  A[1][1] = a;
-
-		// 変形後の頂点位置を計算
-		fsv = A * (v - pc) + qc;
+		fsv = vt / mu + qc; 
 	}
 
 	// ----課題ここまで----
@@ -182,53 +180,39 @@ glm::vec2 rxMeshDeform2D::rigidDeformation(const glm::vec2 &v, const glm::vec2 &
 
 	// ----課題ここから----
 
-	// 変数の初期化
-	double mu = 0.0;
-	glm::mat2 S(0.0f);
+	// Init
+	double mu1 = 0.0;
+	double mu2 = 0.0; 
+	glm::vec2 vt(0.0f);
 
-	// 制御点でループして、μ と S を計算
+	// Loop control points
 	for (int k = 0; k < m_iNcp; ++k) {
 		int j = m_vCP[k];
-
 		glm::vec2 p = m_vP[j] - pc;
 		glm::vec2 q = m_vX[j] - qc;
 
+		// Weight
 		double dist2 = glm::length2(m_vP[j] - v);
 		double w = (dist2 > 1e-6) ? 1.0 / pow(dist2, alpha) : 0.0;
 
-		mu += w * glm::dot(p, p);
-		S += w * glm::outerProduct(p, q);
+		mu1 += w * glm::dot(q, p);
+		mu2 += w * glm::dot(p, glm::vec2(-(p.y), p.x));
+
+		// A -> Temp vector
+		glm::mat2 tmp1(p.x, p.y, p.y, -(p.x));
+		glm::mat2 tmp2((v - pc).x, (v - pc).y, (v - pc).y, -((v - pc).x));
+		glm::mat2 A = w * tmp1 * tmp2;
+
+		vt += glm::transpose(A) * q;
 	}
 
+	float mu = sqrt(pow(mu1, 2) + pow(mu2, 2)); 
 	if (mu < 1e-6) {
 		// mu が小さすぎる場合、元の位置を返す
 		frv = v;
 	}
 	else {
-		mu = sqrt(mu);
-
-		// 回転のパラメータを計算
-		double a = (S[0][0] + S[1][1]) / mu;
-		double b = (S[1][0] - S[0][1]) / mu;
-
-		double s = sqrt(a * a + b * b);
-		if (s < 1e-6) {
-			// s が小さすぎる場合、元の位置を返す
-			frv = v;
-		}
-		else {
-			// 正規化
-			a /= s;
-			b /= s;
-
-			// 回転行列 A を構築
-			glm::mat2 A;
-			A[0][0] = a;  A[0][1] = -b;
-			A[1][0] = b;  A[1][1] = a;
-
-			// 変形後の頂点位置を計算
-			frv = A * (v - pc) + qc;
-		}
+		frv = vt / mu + qc;
 	}
 
 	// ----課題ここまで----
