@@ -53,7 +53,23 @@ void ElasticPBD::projectStretchingConstraint(float ks)
 
 		// ----課題ここから----
 
+		glm::vec3 dir = p1 - p2;
+		float len = glm::length(dir);
 
+		if (len < glm::epsilon<float>()) {
+			dp1 = glm::vec3(0.0f);
+			dp2 = glm::vec3(0.0f);
+			continue; // Avoid division by zero
+		}
+
+		float C = len - d; 
+		glm::vec3 n = dir / len;
+
+		float w1 = 1.0f / m1; 
+		float w2 = 1.0f / m2;
+
+		dp1 = -(w1 / (w1 + w2)) * C * n;
+		dp2 = (w2 / (w1 + w2)) * C * n; 
 
 		// ----課題ここまで----
 
@@ -113,7 +129,47 @@ void ElasticPBD::projectBendingConstraint(float ks)
 
 		// ----課題ここから----
 
+		glm::vec3 n1 = glm::cross(p2, p3);
+		glm::vec3 n2 = glm::cross(p2, p4);
 
+		float len1 = glm::length(n1);
+		float len2 = glm::length(n2);
+
+		if (len1 < glm::epsilon<float>() || len2 < glm::epsilon<float>()) {
+			dp1 = dp2 = dp3 = dp4 = glm::vec3(0.0f);
+			continue; // Avoid division by zero
+		}
+
+		n1 /= len1;
+		n2 /= len2;
+
+		float d = glm::dot(n1, n2);
+		d = glm::clamp(d, -1.0f, 1.0f);
+
+		float C = acos(d) - phi0;
+
+		glm::vec3 q3 = (glm::cross(p2, n2) + glm::cross(n1, p2) * d) / len1;
+		glm::vec3 q4 = (glm::cross(p2, n1) + glm::cross(n2, p2) * d) / len2;
+		glm::vec3 q2 = - (glm::cross(p3, n2) + glm::cross(n1, p3) * d) / len1 - (glm::cross(p4, n1) + glm::cross(n2, p4) * d) / len2;
+		glm::vec3 q1 = -q2 - q3 - q4;
+
+
+		float w1 = 1.0f / m1;
+		float w2 = 1.0f / m2;
+		float w3 = 1.0f / m3;
+		float w4 = 1.0f / m4;
+
+		float down_sum = (w1 + w2 + w3 + w4) * (glm::length2(q1) + glm::length2(q2) + glm::length2(q3) + glm::length2(q4)); 
+
+		if (down_sum < glm::epsilon<float>()) {
+			dp1 = dp2 = dp3 = dp4 = glm::vec3(0.0f);
+			continue;
+		}
+
+		dp1 = -(4 * w1 * glm::sqrt(1 - d * d) * C * q1) / down_sum; 
+		dp2 = -(4 * w2 * glm::sqrt(1 - d * d) * C * q2) / down_sum;
+		dp3 = -(4 * w3 * glm::sqrt(1 - d * d) * C * q3) / down_sum;
+		dp4 = -(4 * w4 * glm::sqrt(1 - d * d) * C * q4) / down_sum;
 
 		// ----課題ここまで----
 
@@ -163,9 +219,33 @@ void ElasticPBD::projectVolumeConstraint(float ks)
 
 		// ----課題ここから----
 
+		float V = calVolume(p1, p2, p3, p4);
+		float C = V - V0; 
 
+		glm::vec3 q1 = glm::cross(p2 - p3, p4 - p3);
+		glm::vec3 q2 = glm::cross(p3 - p1, p4 - p1);
+		glm::vec3 q3 = glm::cross(p1 - p2, p4 - p2);
+		glm::vec3 q4 = glm::cross(p2 - p1, p3 - p1);
+
+		float w1 = 1.0f / m1;
+		float w2 = 1.0f / m2;
+		float w3 = 1.0f / m3;
+		float w4 = 1.0f / m4;
+
+		float down_sum = (w1 + w2 + w3 + w4) * (glm::length2(q1) + glm::length2(q2) + glm::length2(q3) + glm::length2(q4));
+
+		if (down_sum < glm::epsilon<float>()) {
+			dp1 = dp2 = dp3 = dp4 = glm::vec3(0.0f);
+			continue;
+		}
+
+		dp1 = -(w1 * C * q1) / down_sum;
+		dp2 = -(w2 * C * q2) / down_sum;
+		dp3 = -(w3 * C * q3) / down_sum;
+		dp4 = -(w4 * C * q4) / down_sum;
 
 		// ----課題ここまで----
+
 
 		// 頂点位置を移動
 		if(!m_vFix[v1]) m_vNewPos[v1] += ks*dp1;
