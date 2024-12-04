@@ -65,7 +65,23 @@ int CharacterAnimation::skinningLBS(vector<glm::vec3> &vrts, const vector< map<i
 
 		// ----課題ここから----
 
+		v_new = glm::vec4(0.0f);  // Initialize v_new to zero
 
+		map<int, double>::const_iterator itr = weights[i].begin();
+		for (; itr != weights[i].end(); ++itr) {
+			int j = itr->first;  // Joint index
+			float wij = static_cast<float>(itr->second);  // Weight
+
+			// Get rest pose and current transformation matrices
+			glm::mat4 Bj = m_joints[j].B;
+			glm::mat4 Wj = m_joints[j].W;
+
+			// Compute transformation matrix Mj
+			glm::mat4 Mj = Wj * glm::inverse(Bj);
+
+			// Accumulate the weighted transformed vertex
+			v_new += wij * (Mj * v);
+		}
 
 		// ----課題ここまで----
 
@@ -118,7 +134,58 @@ int CharacterAnimation::skinningDQS(vector<glm::vec3> &vrts, const vector< map<i
 
 		// ----課題ここから----
 
+		DualQuaternion DQ_blend;
+		DQ_blend.m_real = glm::quat(0.0f, 0.0f, 0.0f, 0.0f);
+		DQ_blend.m_dual = glm::quat(0.0f, 0.0f, 0.0f, 0.0f);
 
+		map<int, double>::const_iterator itr = weights[i].begin();
+		for (; itr != weights[i].end(); ++itr) {
+			int j = itr->first;  // Joint index
+			float wij = static_cast<float>(itr->second);  // Weight
+
+			// Get current and rest pose transformation matrices
+			glm::mat4 Wj = m_joints[j].W;
+			glm::mat4 Bj = m_joints[j].B;
+
+			// Extract rotation and translation from Wj
+			glm::vec3 tWj = glm::vec3(Wj[3][0], Wj[3][1], Wj[3][2]);
+			glm::mat3 RWj = glm::mat3(Wj);
+			glm::quat qWj = glm::quat_cast(RWj);
+
+			// Extract rotation and translation from Bj
+			glm::vec3 tBj = glm::vec3(Bj[3][0], Bj[3][1], Bj[3][2]);
+			glm::mat3 RBj = glm::mat3(Bj);
+			glm::quat qBj = glm::quat_cast(RBj);
+
+			// Create dual quaternions for current and rest poses
+			DualQuaternion DQj_current(qWj, tWj);
+			DualQuaternion DQj_bindpose(qBj, tBj);
+
+			// Compute skinning dual quaternion
+			DualQuaternion DQj_skin = DQj_current * DQj_bindpose.conjugate();
+
+			// Accumulate the weighted dual quaternion
+			DQ_blend += wij * DQj_skin;
+		}
+
+		// Normalize the blended dual quaternion
+		DQ_blend.normalize();
+
+		// Apply the blended dual quaternion to the vertex
+		glm::quat qr = DQ_blend.m_real;
+		glm::quat qd = DQ_blend.m_dual;
+
+		glm::quat qr_conj = glm::conjugate(qr);
+		glm::quat qd_qr_conj = qd * qr_conj;
+
+		// Compute the translation component
+		glm::vec3 t = 2.0f * glm::vec3(qd_qr_conj.x, qd_qr_conj.y, qd_qr_conj.z);
+
+		// Rotate the original vertex
+		glm::vec3 v_rot = glm::rotate(qr, v);
+
+		// Compute the transformed vertex
+		v_new = v_rot + t;
 
 		// ----課題ここまで----
 
