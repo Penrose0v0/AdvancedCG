@@ -54,7 +54,48 @@ void WaveSWE::advection(float *d_new, float *d, float *u_new, float *v_new, floa
 
 	// ----課題ここから----
 
+	for (int j = 1; j < m_ny - 1; ++j) {
+		for (int i = 1; i < m_nx - 1; ++i) {
+			// 現在のグリッドセルの位置
+			float x = i * dx;
+			float y = j * dy;
 
+			// バックトレースして出発点を求める
+			float x0 = x - u[IDX(i, j)] * dt;
+			float y0 = y - v[IDX(i, j)] * dt;
+
+			// 出発点をグリッド内にクランプ
+			x0 = glm::clamp(x0, 0.0f, (m_nx - 1) * dx);
+			y0 = glm::clamp(y0, 0.0f, (m_ny - 1) * dy);
+
+			// 出発点のグリッドインデックスを求める
+			int i0 = static_cast<int>(floor(x0 / dx));
+			int j0 = static_cast<int>(floor(y0 / dy));
+			i0 = glm::clamp(i0, 0, m_nx - 2);
+			j0 = glm::clamp(j0, 0, m_ny - 2);
+
+			// 出発点のフラクショナル部分
+			float s = (x0 - i0 * dx) / dx;
+			float t = (y0 - j0 * dy) / dy;
+
+			// 1次元配列から2次元データをバイリニア補間
+			float d_interp = (1 - s) * (1 - t) * d[IDX(i0, j0)] + s * (1 - t) * d[IDX(i0 + 1, j0)]
+				+ (1 - s) * t * d[IDX(i0, j0 + 1)] + s * t * d[IDX(i0 + 1, j0 + 1)];
+			float u_interp = (1 - s) * (1 - t) * u[IDX(i0, j0)] + s * (1 - t) * u[IDX(i0 + 1, j0)]
+				+ (1 - s) * t * u[IDX(i0, j0 + 1)] + s * t * u[IDX(i0 + 1, j0 + 1)];
+			float v_interp = (1 - s) * (1 - t) * v[IDX(i0, j0)] + s * (1 - t) * v[IDX(i0 + 1, j0)]
+				+ (1 - s) * t * v[IDX(i0, j0 + 1)] + s * t * v[IDX(i0 + 1, j0 + 1)];
+
+			// 更新後の値を格納
+			d_new[IDX(i, j)] = d_interp;
+			u_new[IDX(i, j)] = u_interp;
+			v_new[IDX(i, j)] = v_interp;
+		}
+	}
+
+	// 境界条件の適用
+	bnd(d_new);
+	bnd(u_new, v_new);
 
 	// ----課題ここまで----
 
@@ -103,7 +144,38 @@ void WaveSWE::pressure(float *d_new, float *d, float *u_new, float *v_new, float
 
 	// ----課題ここから----
 
+	// 速度の圧力項を計算（中央差分）
+	for (int j = 1; j < m_ny - 1; ++j) {
+		for (int i = 1; i < m_nx - 1; ++i) {
+			int idx = IDX(i, j);
 
+			// 水面高さの勾配
+			float dh_dx = (m_h[IDX(i + 1, j)] - m_h[IDX(i - 1, j)]) / (2.0f * dx);
+			float dh_dy = (m_h[IDX(i, j + 1)] - m_h[IDX(i, j - 1)]) / (2.0f * dy);
+
+			// 速度場の更新
+			u_new[idx] -= g * dt * dh_dx;
+			v_new[idx] -= g * dt * dh_dy;
+		}
+	}
+
+	// 速度場に境界条件を適用
+	bnd(u_new, v_new);
+
+	// 水深の更新（速度場の発散）
+	for (int j = 1; j < m_ny - 1; ++j) {
+		for (int i = 1; i < m_nx - 1; ++i) {
+			int idx = IDX(i, j);
+
+			float du_dx = (u_new[IDX(i + 1, j)] - u_new[IDX(i - 1, j)]) / (2.0f * dx);
+			float dv_dy = (v_new[IDX(i, j + 1)] - v_new[IDX(i, j - 1)]) / (2.0f * dy);
+
+			d_new[idx] = d[idx] - d[idx]* dt * (du_dx + dv_dy);
+		}
+	}
+
+	// 水深に境界条件を適用
+	bnd(d_new);
 
 	// ----課題ここまで----
 
